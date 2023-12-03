@@ -1,0 +1,349 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <title>Bootstrap Example</title>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css">
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
+  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script>
+  <link rel="stylesheet" href="assets/css/custom.css">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@200;300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" />
+</head>
+<body>
+
+<div class="jumbotron text-center">
+  <h1>Online Voice Recorder</h1>   
+</div>
+  
+<div class="container">
+  <div class="row">
+    <div class="col-lg-8 recordcard text-center col-lg-push-2">
+      <img src="assets/images/microphone.png" width="20%"/>
+      
+      <div class="col-lg-12">
+      
+        <select style="display: none;" id="mic-select">
+        <option value="" hidden="">Select mic</option>
+        </select>
+
+        <div><span id="paused-text"></span></div>
+
+      <div id="mic" style="border-radius: 4px; margin-top: 1rem;display: none;">
+        <div></div>
+      </div>
+
+      <p><label id="timerLabel" style="display: none;" >0:00</label></p>
+
+      <button id="record" class="btn btn-orange">Record</button>
+      <button id="pause" style="display: none;" class="btn btn-orange">Pause</button> 
+     
+
+      
+    
+      
+      <div id="waveform-timeline"></div>
+
+      <div id="recordings" style="margin: 1rem 0;">
+        <div></div>
+      </div>
+        
+      
+      <!-- <button id="delete" style="display: none;" class="btn btn-orange">Delete</button> -->
+
+ 
+    <div class="col-lg-12">
+      <a href="#" id="play" class="iconstyle" style="display: none;" >
+        <i id="play-icon" class="fa fa-play" aria-hidden="true"></i>       
+      </a>
+    </div>
+      <button id="save-and-send" style="display:none;" class="btn btn-orange">Save and Send</button>
+      <a href="#" id="download" style="display: none;" class="iconstyle">
+        <i class="fa fa-download" aria-hidden="true"></i>         
+      </a>
+      <a href="#" class="iconstyle"  id="delete" style="display: none;">
+        <i class="fa fa-trash" aria-hidden="true"></i>
+      </a>
+      </div>
+    </div>
+
+
+     
+
+  </div>
+</div>
+
+<script src="
+  https://cdn.jsdelivr.net/npm/sweetalert2@11.10.0/dist/sweetalert2.all.min.js
+  "></script>
+  <link href="
+  https://cdn.jsdelivr.net/npm/sweetalert2@11.10.0/dist/sweetalert2.min.css
+  " rel="stylesheet">
+
+<script type="module" data-type="module">
+  // Record plugin
+  import WaveSurfer from 'https://unpkg.com/wavesurfer.js@7/dist/wavesurfer.esm.js'
+  import RecordPlugin from 'https://unpkg.com/wavesurfer.js@7/dist/plugins/record.esm.js'
+  import TimelinePlugin from 'https://unpkg.com/wavesurfer.js@7/dist/plugins/timeline.esm.js'
+
+  const micSelect = document.querySelector('#mic-select');
+
+  // Mic selection
+  RecordPlugin.getAvailableAudioDevices().then((devices) => {
+    devices.forEach((device) => {
+      const option = document.createElement('option');
+      option.value = device.deviceId;
+      option.text = device.label || device.deviceId;
+      micSelect.appendChild(option);
+    });
+  });
+
+  // Create an instance of WaveSurfer
+  const wavesurfer = WaveSurfer.create({
+    height: 200, 
+    container: '#mic',
+    waveColor: 'rgb(255, 255, 255)',
+    progressColor: 'rgb(88, 156, 208)',
+    // Set a bar width
+    barWidth: 3,
+    // Optionally, specify the spacing between bars
+    barGap: 5,
+    // And the bar radius
+    barRadius: 2,
+    barHeight: 2,
+  });
+
+  // Initialize the Record plugin
+  const record = wavesurfer.registerPlugin(RecordPlugin.create());
+ 
+    const pauseButton = document.querySelector('#pause');
+    const pauseLabel = document.querySelector('#paused-text');
+    const saveandsendButton = document.querySelector('#save-and-send');
+      const deleteButton = document.querySelector('#delete');
+      const timerLabel = document.querySelector('#timerLabel');
+
+      const playButton = document.querySelector('#play');
+      const playIcon = document.querySelector('#play-icon');
+
+        const downloadButton = document.querySelector('#download');
+
+        
+
+  
+
+  let timerInterval;
+  let startTime;
+  let elapsedTime = 0;
+  let isPaused = false;
+
+   function updateTimerLabel() {
+      const minutes = Math.floor(elapsedTime / 60);
+      const seconds = elapsedTime % 60;
+      document.getElementById('timerLabel').textContent = `${minutes}:${seconds < 10 ? '0' : ''}${seconds}`;
+    }
+
+    function startTimer() {
+      if (!timerInterval) {
+        startTime = new Date().getTime();
+        timerInterval = setInterval(function () {
+          if (!isPaused) {
+            const currentTime = new Date().getTime();
+            elapsedTime = Math.floor((currentTime - startTime) / 1000);
+            updateTimerLabel();
+          }
+        }, 1000);
+      }
+    }
+
+    function pauseResumeTimer() {
+        if (isPaused) {
+          startTime = new Date().getTime() - elapsedTime * 1000;
+          timerInterval = setInterval(function () {
+            if (!isPaused) {
+              const currentTime = new Date().getTime();
+              elapsedTime = Math.floor((currentTime - startTime) / 1000);
+              updateTimerLabel();
+            }
+          }, 1000);
+        } else {
+          clearInterval(timerInterval);
+        }
+        isPaused = !isPaused;
+      }
+
+      function resetTimer() {
+          clearInterval(timerInterval);
+          timerInterval = null;
+          startTime = null;
+          elapsedTime = 0;
+          isPaused = false;
+          updateTimerLabel();
+        }
+
+
+    
+  // Render recorded audio
+  record.on('record-end', (blob) => {
+    const container = document.querySelector('#recordings');
+
+    // Clear existing elements in #recordings
+    while (container.firstChild) {
+      container.removeChild(container.firstChild);
+    }
+
+    pauseButton.style.display = "none"
+    pauseButton.textContent = 'Pause';
+    recButton.style.display = "none";
+    recButton.textContent = "Record"
+    pauseLabel.textContent = "";
+    timerLabel.style.display = "none";
+    playButton.style.display = "inline";
+    downloadButton.style.display = "inline";
+
+
+    saveandsendButton.style.display = "inline"
+    deleteButton.style.display = "inline"
+
+
+    const mic = document.querySelector('#mic');
+    mic.style.display = "none";
+
+    const recordedUrl = URL.createObjectURL(blob);
+
+    // Create wavesurfer from the recorded audio
+    const wavesurfer= WaveSurfer.create({
+      height: 200,     
+      container,
+      waveColor: 'rgb(255, 255, 255)',
+      progressColor: 'rgb(88, 156, 208)',
+      url: recordedUrl,
+      // Set a bar width
+      barWidth: 3,
+      // Optionally, specify the spacing between bars
+      barGap: 5,
+      // And the bar radius
+      barRadius: 2,
+      barHeight: 2,
+    });
+
+    // Play button
+    const button = playButton;
+    button.onclick = () => wavesurfer.playPause();
+    wavesurfer.on('pause', () => (playIcon.className = 'fa fa-play'));
+    wavesurfer.on('play', () => (playIcon.className = 'fa fa-pause'));
+
+    // Download link
+    const link = downloadButton;
+
+    Object.assign(link, {
+      href: recordedUrl,
+      download: 'recording.' + blob.type.split(';')[0].split('/')[1] || 'webm',
+    });
+  });
+
+   saveandsendButton.onclick = () => {
+     recButton.style.display = "inline";
+     saveandsendButton.style.display = "none"
+     deleteButton.style.display = "none"
+      playButton.style.display = "none";
+     downloadButton.style.display = "none";
+
+      const recordingContainer = document.querySelector('#recordings');
+     recordingContainer.innerHTML = "";
+    }
+
+      deleteButton.onclick = () => {
+          Swal.fire({
+          title: "Recorded file won’t be sent to your scribes. Confirm deletion?",
+          showDenyButton: true,
+          showCancelButton: false,
+          confirmButtonText: "Send Now.",
+          denyButtonText: `Yes, Delete`
+        }).then((result) => {
+          /* Read more about isConfirmed, isDenied below */
+          if (result.isConfirmed) {
+            recButton.style.display = "inline";
+             saveandsendButton.style.display = "none"
+            deleteButton.style.display = "none"
+             playButton.style.display = "none";
+            downloadButton.style.display = "none";
+             const recordingContainer = document.querySelector('#recordings');
+            recordingContainer.innerHTML = "";
+          } else if (result.isDenied) {
+            recButton.style.display = "inline";
+             saveandsendButton.style.display = "none"
+            deleteButton.style.display = "none"
+             const recordingContainer = document.querySelector('#recordings');
+            recordingContainer.innerHTML = "";
+             playButton.style.display = "none";
+            downloadButton.style.display = "none";
+          }
+        });
+        }
+
+  // on pause
+  pauseButton.onclick = () => {
+
+    if (record.isPaused()) {
+      pauseResumeTimer();
+      record.resumeRecording();
+      pauseButton.textContent = 'Pause';
+      pauseLabel.textContent = "";
+      recButton.style.display = "none";
+      return;
+    }
+
+      pauseResumeTimer();
+    record.pauseRecording();
+    pauseButton.textContent = 'Resume';
+    recButton.style.display = "inline";
+    pauseLabel.textContent = "Paused";
+
+
+  };
+
+  // on record button
+  const recButton = document.querySelector('#record');
+
+  recButton.onclick = () => {
+
+   const recordingContainer = document.querySelector('#recordings');
+    recordingContainer.innerHTML = "";
+    resetTimer()
+    recButton.style.display = "none";
+
+   
+    // Clear existing elements in #recordings
+ 
+
+    const mic = document.querySelector('#mic');
+    mic.style.display = "inline";
+
+    if (record.isRecording()) {
+      record.stopRecording();
+      recButton.textContent = 'Record';
+      pauseButton.style.display = 'none';
+      return;
+    }
+
+    recButton.disabled = true;
+    // get selected device
+    const deviceId = micSelect.value;
+    record.startRecording({ deviceId }).then(() => {
+       playButton.style.display = "none";
+      downloadButton.style.display = "none";
+    timerLabel.style.display = "inline"
+    resetTimer()
+    startTimer()
+      recButton.textContent = 'Preview';
+      recButton.disabled = false;
+      pauseButton.style.display = 'inline';
+    });
+  };
+</script>
+
+</body>
+</html>

@@ -1,0 +1,52 @@
+
+body{
+    font-family: 'Poppins', sans-serif;
+}
+.recordcard {
+    background-color: #27516b;
+    padding: 15px;
+    border-radius: 0.5rem;
+    border: 0.125rem transparent;
+    box-shadow: 10px 10px 20px 5px rgba(0,0,0,.12);
+    -webkit-transition: -webkit-box-shadow .5s;
+    transition: -webkit-box-shadow .5s;
+    transition: box-shadow .5s;
+    transition: box-shadow .5s,-webkit-box-shadow .5s;
+    color: #fff;
+}
+
+.btn-orange {
+    background: #f26225;
+    color: #fff;
+    display: inline-block;
+    padding: 10px 27px;
+    margin-bottom: 0px;
+    font-size: 15px;
+    font-weight: 600;
+    line-height: 1.42857143;
+    text-align: left;
+    white-space: nowrap;
+    vertical-align: middle;
+    -ms-touch-action: manipulation;
+    touch-action: manipulation;
+    cursor: pointer;
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
+    background-image: none;
+    border: 1px solid transparent;
+    text-transform: uppercase;    
+}
+
+#recordings{
+    background-color: #639dd224;
+}
+
+a.iconstyle{
+    color: #fff;
+    font-size: 26px;
+    text-decoration: none; 
+    display: inline-block;
+    padding: 15px;
+}
