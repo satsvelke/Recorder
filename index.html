@@ -21,8 +21,8 @@
   
 <div class="container">
   <div class="row">
-    <div class="col-lg-8 recordcard text-center col-lg-push-2">
-      <img src="assets/images/microphone.png" width="20%"/>
+    <div class="col-lg-6 recordcard text-center col-lg-push-3">
+      <img src="assets/images/microphone.png" width="15%"/>
       
       <div class="col-lg-12">
       
@@ -60,13 +60,14 @@
         <i id="play-icon" class="fa fa-play" aria-hidden="true"></i>       
       </a>
     </div>
-      <button id="save-and-send" style="display:none;" class="btn btn-orange">Save and Send</button>
+     
       <a href="#" id="download" style="display: none;" class="iconstyle">
         <i class="fa fa-download" aria-hidden="true"></i>         
       </a>
       <a href="#" class="iconstyle"  id="delete" style="display: none;">
         <i class="fa fa-trash" aria-hidden="true"></i>
       </a>
+      <button id="save-and-send" style="display:none;" class="btn btn-orange">Save and Send</button>
       </div>
     </div>
 
@@ -103,12 +104,12 @@
 
   // Create an instance of WaveSurfer
   const wavesurfer = WaveSurfer.create({
-    height: 200, 
+    height: 90, 
     container: '#mic',
     waveColor: 'rgb(255, 255, 255)',
     progressColor: 'rgb(88, 156, 208)',
     // Set a bar width
-    barWidth: 3,
+    barWidth: 2,
     // Optionally, specify the spacing between bars
     barGap: 5,
     // And the bar radius
@@ -215,13 +216,13 @@
 
     // Create wavesurfer from the recorded audio
     const wavesurfer= WaveSurfer.create({
-      height: 200,     
+      height: 90,     
       container,
       waveColor: 'rgb(255, 255, 255)',
       progressColor: 'rgb(88, 156, 208)',
       url: recordedUrl,
       // Set a bar width
-      barWidth: 3,
+      barWidth: 2,
       // Optionally, specify the spacing between bars
       barGap: 5,
       // And the bar radius
