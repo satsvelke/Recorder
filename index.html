@@ -255,8 +255,10 @@
           title: "Recorded file won’t be sent to your scribes. Confirm deletion?",
           showDenyButton: true,
           showCancelButton: false,
-          confirmButtonText: "Send Now.",
-          denyButtonText: `Yes, Delete`
+          confirmButtonText: "Yes, Delete",
+          denyButtonText: `Send Now.`,
+          confirmButtonColor: "#d33",
+             denyButtonColor: "#3085d6",
         }).then((result) => {
           /* Read more about isConfirmed, isDenied below */
           if (result.isConfirmed) {
