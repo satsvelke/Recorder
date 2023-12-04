@@ -202,7 +202,7 @@
     pauseLabel.textContent = "";
     timerLabel.style.display = "none";
     playButton.style.display = "inline";
-    downloadButton.style.display = "inline";
+    downloadButton.style.display = "none";
 
 
     saveandsendButton.style.display = "inline"
@@ -236,13 +236,7 @@
     wavesurfer.on('pause', () => (playIcon.className = 'fa fa-play'));
     wavesurfer.on('play', () => (playIcon.className = 'fa fa-pause'));
 
-    // Download link
-    const link = downloadButton;
-
-    Object.assign(link, {
-      href: recordedUrl,
-      download: 'recording.' + blob.type.split(';')[0].split('/')[1] || 'webm',
-    });
+    
   });
 
    saveandsendButton.onclick = () => {
