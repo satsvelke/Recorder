@@ -15,6 +15,8 @@ body{
     color: #fff;
 }
 
+
+
 .btn-orange {
     background: #f26225;
     color: #fff;
@@ -37,6 +39,7 @@ body{
     background-image: none;
     border: 1px solid transparent;
     text-transform: uppercase;    
+   border-radius: 4px;
 }
 
 #recordings{
