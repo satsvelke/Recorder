@@ -91,23 +91,25 @@
   https://cdn.jsdelivr.net/npm/sweetalert2@11.10.0/dist/sweetalert2.min.css
   " rel="stylesheet">
 
-<script type="module" data-type="module">
-  // Record plugin
-  import WaveSurfer from 'https://unpkg.com/wavesurfer.js@7/dist/wavesurfer.esm.js'
-  import RecordPlugin from 'https://unpkg.com/wavesurfer.js@7/dist/plugins/record.esm.js'
-  import TimelinePlugin from 'https://unpkg.com/wavesurfer.js@7/dist/plugins/timeline.esm.js'
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/wavesurfer.js/7.5.0/wavesurfer.min.js" 
+  integrity="sha512-tw0yGmCkRLR5hoLMBGa9acFWcsElrgRtX0ncyTEhv1cxMnt0nV9szkrsQhUzzoemHdKSGLJorm0/Sv4Opkx+fw==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
 
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/wavesurfer.js/7.5.0/plugins/timeline.min.js"
+    integrity="sha512-4JSLuu8RAcov9aeBUohDbxaX241OmwygC0mssO6wIZkfKI1wE9v5iRKxhXBGpbEsjMRkQ4YUbR5r4sbxwe77vA=="
+    crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+  
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/wavesurfer.js/7.5.0/plugins/record.min.js"
+    integrity="sha512-AAf6zkYu2AkH4P6+8FzYWT2a8mDeX90ma0C+cUzhTKWjUpyC/sQTiTJE6NICe2tBGMsy5xs/4SmHwZOgTe/3nQ=="
+    crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+
+
+<script>
+ 
   const micSelect = document.querySelector('#mic-select');
 
-  // Mic selection
-  RecordPlugin.getAvailableAudioDevices().then((devices) => {
-    devices.forEach((device) => {
-      const option = document.createElement('option');
-      option.value = device.deviceId;
-      option.text = device.label || device.deviceId;
-      micSelect.appendChild(option);
-    });
-  });
+  // create record plugin 
+  var recordPlugin = WaveSurfer.Record.create() 
 
   // Create an instance of WaveSurfer
   const wavesurfer = WaveSurfer.create({
@@ -122,11 +124,23 @@
     // And the bar radius
     barRadius: 2,
     barHeight: 2,
+    plugins: [
+      recordPlugin // register plugin
+    ]
   });
 
+     WaveSurfer.Record.getAvailableAudioDevices().then((devices) => {
+        devices.forEach((device) => {
+          const option = document.createElement('option');
+          option.value = device.deviceId;
+          option.text = device.label || device.deviceId;
+          micSelect.appendChild(option);
+        });
+      });
+      
+
   // Initialize the Record plugin
-  const record = wavesurfer.registerPlugin(RecordPlugin.create());
- 
+
     const pauseButton = document.querySelector('#pause');
     const pauseLabel = document.querySelector('#paused-text');
     const saveandsendButton = document.querySelector('#save-and-send');
@@ -194,7 +208,7 @@
 
     
   // Render recorded audio
-  record.on('record-end', (blob) => {
+  recordPlugin.on('record-end', (blob) => {
     const container = document.querySelector('#recordings');
 
     // Clear existing elements in #recordings
@@ -291,9 +305,9 @@
   // on pause
   pauseButton.onclick = () => {
 
-    if (record.isPaused()) {
+    if (recordPlugin.isPaused()) {
       pauseResumeTimer();
-      record.resumeRecording();
+      recordPlugin.resumeRecording();
       pauseButton.textContent = 'Pause';
       pauseLabel.textContent = "";
       recButton.style.display = "none";
@@ -301,7 +315,7 @@
     }
 
       pauseResumeTimer();
-    record.pauseRecording();
+    recordPlugin.pauseRecording();
     pauseButton.textContent = 'Resume';
     recButton.style.display = "inline";
     pauseLabel.textContent = "Paused";
@@ -326,8 +340,8 @@
     const mic = document.querySelector('#mic');
     mic.style.display = "inline";
 
-    if (record.isRecording()) {
-      record.stopRecording();
+    if (recordPlugin.isRecording()) {
+      recordPlugin.stopRecording();
       recButton.textContent = 'Record';
       pauseButton.style.display = 'none';
       return;
@@ -336,7 +350,7 @@
     recButton.disabled = true;
     // get selected device
     const deviceId = micSelect.value;
-    record.startRecording({ deviceId }).then(() => {
+    recordPlugin.startRecording({ deviceId }).then(() => {
        playButton.style.display = "none";
       downloadButton.style.display = "none";
     timerLabel.style.display = "inline"
