@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <title>Bootstrap Example</title>
+  <title>Recorder</title>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css">
@@ -55,21 +55,24 @@
     
 
  
-    <div class="col-lg-12">
-      <a href="#" id="play" class="iconstyle" style="display: none;" >
-        <i id="play-icon" class="fa fa-play" aria-hidden="true"></i>       
-      </a>
-    </div>
+
      
       <a href="#" id="download" style="display: none;" class="iconstyle">
         <i class="fa fa-download" aria-hidden="true"></i>         
       </a>
 
     <div class="col-lg-12 btnbtm">
+      <div class=" col-lg-3">
       <a href="#" class="iconstyle float-l"  id="delete" style="display: none;">
         <i class="fa fa-trash" aria-hidden="true"></i>
       </a>
-      <button id="save-and-send" style="display:none;" class="btn btn-orange float-r">Save and Send</button>
+    </div>
+      <div class="col-lg-5">
+        <a href="#" id="play" class="iconstyle" style="display: none;" >
+          <i id="play-icon" class="fa fa-play" aria-hidden="true"></i>       
+        </a>
+      </div>
+      <button id="save-and-send" style="display:none;" class="btn btn-orange col-lg-4 float-r">Save and Send</button>
     </div>
 
       </div>
@@ -260,7 +263,7 @@
           showDenyButton: true,
           showCancelButton: false,
           confirmButtonText: "Yes, Delete",
-          denyButtonText: `Send Now.`,
+          denyButtonText: `Send Now`,
           confirmButtonColor: "#d33",
              denyButtonColor: "#3085d6",
         }).then((result) => {
