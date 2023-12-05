@@ -48,5 +48,18 @@ a.iconstyle{
     font-size: 26px;
     text-decoration: none; 
     display: inline-block;
-    padding: 15px;
+    padding: 3px 0px;
+}
+
+.float-r{
+    float: right;
+}
+
+.float-l{
+    float: left;
+}
+
+.btnbtm{
+    padding: 0;
+    margin-top: 15px;
 }
