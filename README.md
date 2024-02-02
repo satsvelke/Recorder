@@ -44,8 +44,9 @@ This repository contains the code for an Online Voice Recorder, built using HTML
 
 ## Contributors
 
-- [Satish Patil]
-- [Ashwini Kate]
+- [Satish Patil](https://github.com/satsvelke)
+- [Ashwini Kate](https://github.com/Parees2906)
+
 
 ## License
 
